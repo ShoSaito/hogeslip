@@ -29,7 +29,7 @@ if os.getenv('GAE_APPLICATION', None):
 else:
     DEBUG = True
 
-ALLOWED_HOSTS = ["hogeslip.appspot.com"]
+ALLOWED_HOSTS = ["127.0.0.1","hogeslip.appspot.com"]
 
 
 
