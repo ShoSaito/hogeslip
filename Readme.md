@@ -17,6 +17,6 @@ required python 3.x
 * make migrations, migrate, create superuser
 * pyhotn manage.py runserver
 
-# todo
+# todo
 modelのクラス設計を見直して、もっと汎用的に、カスタマイズしやすい様に改善する。
 
