@@ -1,0 +1,20 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+<h1 class="h3 border-bottom pb-1"">商品削除</h1>
+
+<form method="post">{% csrf_token %}
+    <p><span class="border-bottom border-danger px-3 h4">{{ object }}</span>　を削除します。よろしいですか??</p>
+    <input class="btn btn-danger btn" type="submit" value="はい">
+</form>
+<div class="mt-5">
+    <nav aria-label="breadcrumb mt-5">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'mstr_manage' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'product_list' %}">商品一覧</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'product_detail' pk=object.pk %}">商品詳細</a></li>
+        <li class="breadcrumb-item active" aria-current="page">商品削除</li>
+    </ol>
+    </nav>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container my-3">
+    <h1 class="h3 border-bottom pb-1"">納品先詳細</h1>
+    <div class="col-lg-7 col-12 mt-4">
+        <table
+        class="table table-bordered"
+        >
+            <tr>
+                <th class ="bg-light" style="width:30%">納品先</th>
+                <td>{{ object.customer }}</td>
+            </tr>
+            <tr>
+                <th class ="bg-light" style="width:30%">納品先コード</th>
+                <td>{{ object.code }}</td>
+            </tr>
+            <tr>
+                <th class ="bg-light" style="width:30%">納品先名</th>
+                <td>{{ object.name }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <a class="btn btn-warning btn m-1" href="{% url 'deliv_dest_update' pk=object.pk %}" role="button">修正</a>
+    <a class="btn btn-danger btn m-1" href="{% url 'deliv_dest_delete' pk=object.pk %}" role="button">削除</a>
+
+	<div class="mt-5">
+        <nav aria-label="breadcrumb mt-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'mstr_manage' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'deliv_dest_list' %}">納品先一覧</a></li>
+            <li class="breadcrumb-item active" aria-current="page">納品先詳細</li>
+        </ol>
+        </nav>
+	</div>
+	
+
+</div>
+{% endblock %}

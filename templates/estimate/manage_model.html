@@ -1,0 +1,13 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container my-3">
+    <h1 class="h3 border-bottom pb-1">外部データ取り込み</h1>
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="処理開始">
+    </form> 
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container my-3">
+    <h1 class="h3 border-bottom pb-1"">マスタ管理</h1>
+    <p>各種マスタの編集を行います。</p>
+
+    <div class="row mt-3">
+        <div class="col-lg-3 col-10">
+            <a class="btn btn-outline-secondary btn-lg btn-block m-2" href="{% url 'customer_list' %}">得意先</a>
+            <a class="btn btn-outline-secondary btn-lg btn-block m-2" href="{% url 'product_list' %}">商品</a>
+        </div>
+        <div class="col-lg-3 col-10">
+            <a class="btn btn-outline-secondary btn-lg btn-block m-2" href="{% url 'deliv_dest_list' %}">納品先</a>
+            <a class="btn btn-outline-secondary btn-lg btn-block m-2" href="{% url 'product_per_customer_list' %}">得意別商品</a>
+        </div>
+    </div>
+    
+    <div class="mt-5">
+        <nav aria-label="breadcrumb mt-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active"><a href="#">Home</a></li>
+            <!-- <li class="breadcrumb-item"><a href="#">Library</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Data</li> -->
+        </ol>
+        </nav>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container my-3">
+    <h1 class="h3 border-bottom pb-1"">商品詳細</h1>
+    
+    <div class="row align-items-center">
+        <div class="col-lg-5 col-12 mt-4">
+            {% if object.image %}
+                <img class="mx-auto d-block align-middle"  style="width: 100%" src="{{ object.image.url }}" >
+            {% endif %}
+        </div>
+        <div class="col-lg-7 col-12 mt-4">
+            <table
+            class="table table-bordered"
+            >
+                <tr>
+                    <th class ="bg-light" style="width:30%">商品コード</th>
+                    <td>{{ object.code }}</td>
+                </tr>
+                <tr>
+                    <th class ="bg-light" style="width:30%">商品名</th>
+                    <td>{{ object.name }}</td>
+                </tr>
+                <tr>
+                    <th class ="bg-light" style="width:30%">販売エリア</th>
+                    <td>{{ object.area }}</td>
+                </tr>
+                <tr>
+                    <th class ="bg-light" style="width:30%">定価</th>
+                    <td>{{ object.selling_price }}</td>
+                </tr>
+            </table>
+
+            <a class="btn btn-warning btn m-1 float-right" href="{% url 'product_update' pk=object.pk %}" role="button">修正</a>
+            <a class="btn btn-danger btn m-1 float-right" href="{% url 'product_delete' pk=object.pk %}" role="button">削除</a>
+        
+        </div>
+    </div>
+
+	<div class="mt-5">
+        <nav aria-label="breadcrumb mt-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'mstr_manage' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'product_list' %}">商品一覧</a></li>
+            <li class="breadcrumb-item active" aria-current="page">商品詳細</li>
+        </ol>
+        </nav>
+	</div>
+	
+
+</div>
+{% endblock %}

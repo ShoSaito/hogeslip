@@ -1,0 +1,26 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+<h1 class="h3 border-bottom pb-1"">見積削除</h1>
+
+<form method="post">{% csrf_token %}
+    
+    <p class="text-danger font-weight-bold h3 my-5">{{ object.customer.name }}様向けの下記見積を削除します。よろしいですか？</p>
+
+    <p class="m-5 h4">見積番号: {{ object.pk }}</p>
+
+    <input class="btn btn-danger btn" type="submit" value="はい">
+    <a class="btn btn-primary btn m-1" href="{% url 'estimate_header_detail' pk=object.pk %}" role="button">いいえ</a>
+</form>
+
+<div class="mt-5">
+    <nav aria-label="breadcrumb mt-5">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'estimate_header_list' %}">見積一覧</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'estimate_header_detail' pk=object.pk %}">見積詳細</a></li>
+        <li class="breadcrumb-item active" aria-current="page">見積削除</li>
+    </ol>
+    </nav>
+</div>
+
+{% endblock %}

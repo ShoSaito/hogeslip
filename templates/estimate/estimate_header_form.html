@@ -1,0 +1,339 @@
+
+{% extends 'common/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container my-3">
+
+    <h1 class="h3 border-bottom pb-1">見積更新・作成</h1>
+    <form method="post">{% csrf_token %}{{ post_forms.management_form }}
+        {% for field in form.hidden_fields %}
+            {{ field }}
+        {% endfor %}
+        
+        <table
+        class="table table-bordered mt-2"
+        >
+            <tr>
+                <th class ="bg-light" style=" width:10%">見積状態</th>
+                <td>{{ form.estimate_state|as_crispy_field }}</td>  
+                <th class ="bg-light" style="width:10%">
+                    掛率
+                    <a href="#" id="id_wholesale_rate_btn" class="badge badge-pill badge-danger py-1 px-2 mx-3">
+                        明細へ一括適用
+                    </a>
+                </th>
+                <td>{{ form.wholesale_rate|as_crispy_field }}</td>     
+            </tr>
+        </table>
+
+        <table
+        class="table table-bordered"
+        >
+            <tr>
+                <th class ="bg-light" style="width:10%">得意先ｺｰﾄﾞ</th>
+                <td>{{ form.customer|as_crispy_field }}</td>
+                <th class ="bg-light" style="width:10%">作成日</th>
+                <td>{{ form.created_date|as_crispy_field }}</td>
+                <th class ="bg-light" style="width:10%">作成者</th>
+                <td>{{ form.sls_prn|as_crispy_field }}</td>
+            </tr>
+            <tr>
+                <th class ="bg-light" style="width:10%">得意先名</th>       
+                <!-- <td data-toggle="tooltip" 
+                    data-placement="bottom" title="見積書にはこの項目が表示されます">
+                    {{ form.customer_name|as_crispy_field }}
+                </td> -->
+                <td>{{ form.customer_name|as_crispy_field }}</td>        
+                <th class ="bg-light" id="valid_date" style="width:10%">有効期限</th>
+                <!-- <td data-toggle="tooltip" 
+                    data-placement="bottom" title="新規見積で未入力の場合は、有効期限が「次回見積まで」となります。"">
+                    {{ form.valid_date|as_crispy_field }}
+                </td> -->
+                <td>{{ form.valid_date|as_crispy_field }}</td>
+                <th class ="bg-light" style="width:10%">承認者</th>
+                <td>{{ form.sls_rep|as_crispy_field }}</td>
+            </tr>
+        </table>
+
+        <table
+        class="table table-bordered my-3"
+        id="table_estimate_detail"
+        >
+            <thead>
+                <tr>
+                    <th data-sortable="true"  class ="bg-light">削除</th>
+                    <th data-sortable="true" class ="bg-light" style="width:30%">商品</th>
+                    <th class="bg-light" id="header_selling_price_new">定価</th>
+                    <th class="bg-light" id="header_wholesale_price_new">卸値</th> 
+                    <th data-sortable="true" class ="bg-light">備考</th>
+                    <th data-sortable="true" class ="bg-light" style="width: 10%">掛率</th>    
+                </tr>
+            </thead>
+
+            <tbody>
+           
+            {{ form.formset.management_form }}
+            {% for row in form.formset %}
+                {% for field in row.hidden_fields %}
+                    {{ field }}
+                {% endfor %}
+                <tr>
+                    <td>{{ row.DELETE }}</td>   
+                    <td data-sortable="true">{{ row.product|as_crispy_field }}</td>
+                    <td style="background:#EBF5FB">{{ row.selling_price_new|as_crispy_field }}</td>
+                    <td style="background:#FEF9E7">{{ row.wholesale_price_new|as_crispy_field }}</td>
+                    <td>{{ row.remarks|as_crispy_field }}</td>   
+                    <td>{{ row.wholesale_rate|as_crispy_field }}</td>   
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <table
+        class="table table-bordered"
+        >
+            <tr>
+                <th class ="bg-light" style=" width:20%">備考1</th>
+                <td>{{ form.remarks_1|as_crispy_field }}</td>
+            </tr>
+            <tr>
+                <th class ="bg-light">備考2</th>
+                <td>{{ form.remarks_2|as_crispy_field }}</td>
+            </tr>
+            <tr>
+                <th class ="bg-light">備考3</th>
+                <td>{{ form.remarks_3|as_crispy_field }}</td>
+            </tr>
+            <tr>
+                <th class ="bg-light">備考4</th>
+                <td>{{ form.remarks_4|as_crispy_field }}</td>
+            </tr>
+        </table>
+        <table
+        class="table table-bordered"
+        >
+            <tr>
+                <th class ="bg-light" style=" width:20%">内部向けメモ</th>
+                <td>{{ form.internal_remarks|as_crispy_field }}</td>
+            </tr>
+        </table>
+        <input  class="btn btn-warning btn" type="submit" value="更新 / 作成">
+    </form>
+
+	<div class="mt-5">
+        <nav aria-label="breadcrumb mt-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'estimate_header_list' %}">見積一覧</a></li>
+            <li class="breadcrumb-item active" aria-current="page">見積編集</li>
+        </ol>
+        </nav>
+    </div>
+    
+</div>
+
+<!-- 単価の掛け率を一括で変更するか確認する -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">明細へ一括適用</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <P>明細の掛け率も、ヘッダーに合わせて一括で変更しますか？</P>
+        <P>※現在入力されている掛け率はクリアされ、卸値は再計算されます。</P>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">いいえ</button>
+        <button type="button" 
+            class="btn btn-primary"  
+            data-dismiss="modal" 
+            id="wholesale_rate_changeconfirm"
+        >
+            はい
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    
+    $(function(){
+        
+        $('#id_created_date').datepicker(
+            {dateFormat: "yy-mm-dd"}
+        );
+        
+        $('#id_valid_date').datepicker(
+            {dateFormat: "yy-mm-dd"}
+        );
+
+
+        // modalを表示する。
+        $('#id_wholesale_rate_btn').on("click",function(){
+            $("#exampleModal").modal();
+        });
+
+
+        // 一括変更する時の動作。ヘッダーの掛け率を明細に入力して、それと上代に掛けて卸値を求める。
+        $('#wholesale_rate_changeconfirm').on("click",function(){
+            var tr = $("#table_estimate_detail tr");
+            for( var i=0, l=tr.length; i<l; i++ ){
+                var selling_price_new = "#id_estimate_detail_set-" + i + "-selling_price_new"
+                var wholesale_price_new = "#id_estimate_detail_set-" + i + "-wholesale_price_new"
+                var wholesale_rate = "#id_estimate_detail_set-" + i + "-wholesale_rate"
+                
+                if ( $(selling_price_new).val() != ""){
+                    $(wholesale_rate).val( $(id_wholesale_rate).val() )
+                    // 小数点2桁は表示されるようにする。
+                    var p = round( 
+                            $(selling_price_new).val() * $(wholesale_rate).val(),
+                            0 )
+                    
+                    $(wholesale_price_new).val( 
+                        p.toFixed(2)
+                    )
+                }
+            }
+        });
+        
+        
+        // 明細で掛け率を変更したら、変更と同時に卸値を変更する。
+        $(".numberinput.form-control" + 
+          "[id$='_rate']").on("change",function(){
+            
+            var wholesale_rate = "#" + $(this).attr('id');
+            var arry = wholesale_rate.split("-")            
+            var selling_price_new = "#id_estimate_detail_set-" + arry[1] + "-selling_price_new"
+            var wholesale_price_new = "#id_estimate_detail_set-" + arry[1] + "-wholesale_price_new"
+            console.log($(wholesale_price_new).val())
+            if ( $(selling_price_new).val() != ""){
+                // 小数点2桁は表示されるようにする。
+                var p = round( 
+                        $(selling_price_new).val() * $(wholesale_rate).val(),
+                        0 )
+                
+                $(wholesale_price_new).val( 
+                    p.toFixed(2)
+                )
+            }
+        });
+
+
+        // 四捨五入関数 math.roundだと上手く動かなかったので。下記をそのまま持ってきた。
+        // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Math/round#A_better_solution
+        function round(number, precision) {
+            var shift = function (number, precision, reverseShift) {
+                if (reverseShift) {
+                precision = -precision;
+                }  
+                var numArray = ("" + number).split("e");
+                return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
+            };
+            return shift(Math.round(shift(number, precision, false)), precision, true);
+        }
+
+    });
+</script>
+
+<!-- 入力値を元にオブジェクトの属性情報をlookupする機能 ajaxで通信する。-->
+<script>
+    $(function(){
+        //おまじない1　ref:https://docs.djangoproject.com/en/2.2/ref/csrf/#
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        //おまじない2 ref:https://narito.ninja/blog/detail/88/
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+        
+        //customerを選択したら、得意先名を取得してくる。
+        $('#id_customer').on('change',function(){
+            var raw = $('#id_customer option:selected').text()
+            var array = raw.split("-")
+            var c_code = array[0]
+
+            $.ajax({
+                'url': '/mstr_manage/customer/getname',
+                'type': 'POST',
+                'data': {
+                    'customer': c_code, 
+                },
+                'dataType': 'json'
+            }).done( response => {
+                $('#id_customer_name').val(response.name)
+            });
+        });
+
+
+        // 明細で品目を変更したら、変更と同時に上代を取得する。
+        
+        // テーブルの中のselect.form-controlを選択
+        $(".select.form-control").on("click change",function(){
+
+            // 選択した要素のidを取得
+            var id_cur_product = $(this).attr('id');
+            //品目を選択した場合のみ次の処理へ
+            if(id_cur_product.indexOf("product") != -1){
+                
+                // 選択した品目のコードを取得
+                var raw = $("#" + id_cur_product + "" + " option:selected").text()
+                var array = raw.split("-")
+                var p_code = array[0]
+                // console.log(p_code)
+
+                // 選択した品目の上代のidを取得
+                var array = id_cur_product.split("-")
+                var idx = array[1]
+                var id_cur_sp = '#id_estimate_detail_set-' + idx + '-selling_price_new'
+
+
+                // 変更したい
+                $.ajax({
+                    'url': '/mstr_manage/product/getsellingprice',
+                    'type': 'POST',
+                    'data': {
+                        'p_code': p_code,
+                    },
+                    'dataType': 'json'
+                }).done( response => {
+                    $(id_cur_sp).val(response.price)
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

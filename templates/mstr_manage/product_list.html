@@ -1,0 +1,74 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="container my-3">
+	<h1 class="h3 border-bottom pb-1">商品一覧</h1>
+
+	<!-- <form class="mt-4" method="GET" action="">
+		<div class="form-group row">
+			<div class="col-xl-3 col-9">
+				<input class="form-control" name="q" value="{{ request.GET.q }}" placeholder="検索：（ コード、名前など ）">
+			</div>
+			<div class="col-xl-3 col-3 text-right">
+				<a class="btn btn-warning " href="{% url 'product_create' %}" role="button">新規作成</a>
+			</div>
+		</div>
+	</form> -->
+    
+    <a class="btn btn-warning m-1" href="{% url 'product_create' %}" role="button">新規作成</a>
+    	
+    <div class="row">
+        <div class="col-lg-8 col-12">
+
+            <table
+            data-toggle="table"
+            data-pagination="true"
+            data-side-pagination="client"
+            data-search="true"
+            data-search-align="left"
+            sortable="true"
+            class="table table-bordered table-striped"
+            >
+            <!-- data-page-size=2 -->
+            <!-- data-search="true"> -->
+            
+            <thead>
+              <tr>
+                <th data-sortable="true">コード</th>
+                <th data-sortable="true">名前</th>
+                <th data-sortable="true">短縮名</th>
+                <th data-sortable="true">エリア</th>
+              </tr>
+            </thead>
+            
+            <tbody>
+                {% for product in object_list %}
+                    <tr>
+                    <td><a href="{% url 'product_detail' pk=product.pk %}">{{ product.code }}</a></td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.alias }}</td>
+                    <td>{{ product.area }}</td>
+                    <!-- <td class="text-center"><a class="btn btn-secondary btn-sm" href="{% url 'product_detail' pk=product.pk %}" role="button"">詳細・閲覧</a></td> -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+
+        </div>
+    </div>
+    
+	
+	<div class="mt-3">
+        <nav aria-label="breadcrumb mt-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'mstr_manage' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">商品一覧</a></li>
+            <!-- <li class="breadcrumb-item active" aria-current="page">Data</li> -->
+        </ol>
+        </nav>
+	</div>
+	
+</div>
+{% endblock %}
