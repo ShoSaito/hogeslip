@@ -13,11 +13,9 @@ required python 3.x
 * clone this repo
 * create venv (recomended)
 * pip install -r requirements.txt
+* need some database, you config it in mysite/setting.py
+* make migrations, migrate, create superuser
 * pyhotn manage.py runserver
-
-# memo
-
-
 
 # todo
 modelのクラス設計を見直して、もっと汎用的に、カスタマイズしやすい様に改善する。
