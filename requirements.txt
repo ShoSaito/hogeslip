@@ -3,3 +3,4 @@ django-crispy-forms
 django-storages[google]
 gcsfs
 django-cleanup
+psycopg2 >= 2.5.4
